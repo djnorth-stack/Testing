@@ -4,7 +4,10 @@ import { Input } from '@/components/ui/input.jsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
 import { Separator } from '@/components/ui/separator.jsx'
-import { Settings, Plus, Trash2, Mail, Calculator } from 'lucide-react'
+import { Settings, Plus, Trash2, Mail, Calculator, LogOut, User } from 'lucide-react'
+import { AuthProvider } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { useAuth } from './contexts/AuthContext'
 import './App.css'
 
 // Conversion constants
@@ -53,13 +56,15 @@ const MOCK_SPOT_PRICES = {
   palladium: 1100.00
 }
 
-function App() {
+function MainApp() {
   const [items, setItems] = useState([])
   const [inputText, setInputText] = useState('')
   const [spotPrices, setSpotPrices] = useState(MOCK_SPOT_PRICES)
   const [multipliers, setMultipliers] = useState(DEFAULT_MULTIPLIERS)
   const [showSettings, setShowSettings] = useState(false)
   const [roundingEnabled, setRoundingEnabled] = useState(true)
+  
+  const { user, logout } = useAuth()
 
   // Parse input text to extract metal item details
   const parseInput = (input) => {
@@ -256,7 +261,21 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <div className="max-w-md mx-auto space-y-4">
         {/* Header */}
-        <div className="text-center py-6">
+        <div className="text-center py-6 relative">
+          <div className="absolute top-0 right-0 flex items-center gap-2">
+            <div className="flex items-center gap-1 text-sm text-slate-600">
+              <User className="w-4 h-4" />
+              <span>{user?.username}</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={logout}
+              className="text-slate-600 hover:text-slate-800"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
           <h1 className="text-3xl font-bold text-slate-800 mb-2">CORREIA</h1>
           <p className="text-slate-600">Precious Metals Valuation</p>
         </div>
@@ -455,6 +474,16 @@ function App() {
         </div>
       </div>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <ProtectedRoute>
+        <MainApp />
+      </ProtectedRoute>
+    </AuthProvider>
   )
 }
 
