@@ -45,10 +45,10 @@ const SILVER_PURITIES = {
   '.800': 0.800
 }
 
-// Mock spot prices (CAD/ozt)
+// Mock spot prices (CAD/ozt) - Updated to current market prices
 const MOCK_SPOT_PRICES = {
   silver: 32.50,
-  gold: 2650.00,
+  gold: 4650.00,
   platinum: 1250.00,
   palladium: 1100.00
 }
